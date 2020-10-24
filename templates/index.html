@@ -1,0 +1,76 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en" class="h-100">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Jekyll v4.1.1">
+        <title>Sticky Footer Navbar Template · Bootstrap</title>
+        <!-- Bootstrap core CSS -->
+        <link href="{% static "css/sticky-footer.css" %}" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "css/container.css" %}" rel="stylesheet">
+    </head>
+    <body class="d-flex flex-column h-100">
+        <header>
+            <!-- Fixed navbar -->
+
+            {% include 'inc/navbar.html' %}
+        
+        </header>
+        <!-- Begin page content -->
+        <div class="container">
+            <div class="row row-quest question_title">
+            <span href="" id="new_questions_text">New questions</a>
+            <a href="" id="hot_questions_text">Hot questions</a>
+        </div>
+        <div class="row">
+            <div id="question-section" class="col">
+                
+                {% include 'inc/one_question.html' %}
+
+                {% include 'inc/one_question.html' %}
+
+                {% include 'inc/one_question.html' %}
+                
+            </div>
+            <div id="tag_section" class="col-4">
+                <div>
+                    <div class="row">
+                        <span class="row tags_header">Tags</span>
+                    </div>
+                    <div class="row link_tags">
+                        <a class="sample_tag lang_tag" href="">perl</a>
+                        <a class="sample_tag lang_tag" href="">MySQL</a>
+                        <a class="sample_tag framework_tag" href="">django</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <span class="row tags_header">Best Members</span>
+                    </div>
+                    <div class="row link_tags">
+                        <a class="sample_tag" href="">Mr.Freeman</a><br>
+                        <a class="sample_tag" href="">Dr.House</a><br>
+                        <a class="sample_tag" href="">Bender</a><br>
+                        <a class="sample_tag" href="">Queen Victoria</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="page_links_row" class="">
+            <button type="button" class="page_btn btn btn-outline-secondary">1</button>
+            <button type="button" class="page_btn btn btn-outline-secondary">2</button>
+            <button type="button" class="page_btn but btn btn-outline-secondary">3</button>
+            <button type="button" class="page_btn but btn btn-outline-secondary">...</button>
+            <button type="button" class="page_btn but btn btn-outline-secondary">53</button>
+        </div>
+    </div>
+    <script src="js/jquery.slim.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
