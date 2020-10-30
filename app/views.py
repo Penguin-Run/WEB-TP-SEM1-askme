@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
 
@@ -10,7 +9,11 @@ questions = [
 	} for idx in range(10)
 ]
 
+
+# def index(request):
+#     return render(request, 'index.html', {
+#     	'questions': questions,
+#     	})
+
 def index(request):
-    return render(request, 'index.html', {
-    	'questions': questions,
-    	})
+     return render(request, 'index.html', {})
