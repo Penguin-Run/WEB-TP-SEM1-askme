@@ -76,4 +76,7 @@ def sign_up(request):
 		})
 
 def settings(request):
-	return render(request, 'settings.html', {})
+	return render(request, 'settings.html', {
+		'tags':tags,
+        'members':best_members,
+		})
