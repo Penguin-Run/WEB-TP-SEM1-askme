@@ -51,7 +51,10 @@ def hot_questions(request):
     })
 
 def ask_question(request):
-	return render(request, 'add_question_form.html', {})
+	return render(request, 'add_question_form.html', {
+		'tags':tags,
+        'members':best_members,
+		})
 
 def question_answers(request, question_id):
 	question = questions[question_id]
