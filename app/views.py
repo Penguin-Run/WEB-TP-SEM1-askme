@@ -64,10 +64,16 @@ def question_answers(request, question_id):
 		})
 
 def login(request):
-	return render(request, 'auth.html', {})
+	return render(request, 'auth.html', {
+		'tags':tags,
+        'members':best_members,
+		})
 
 def sign_up(request):
-	return render(request, 'registration.html', {})
+	return render(request, 'registration.html', {
+		'tags':tags,
+        'members':best_members,
+		})
 
 def settings(request):
 	return render(request, 'settings.html', {})
