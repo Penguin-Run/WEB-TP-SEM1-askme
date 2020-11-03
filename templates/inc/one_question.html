@@ -11,7 +11,7 @@
 			<div class="question-text">{{ question.text }}</div>
 			<div class="row">
 				<div class="col">
-					<a class="ans_tag" href="">answer (<span>3</span>)</a>
+					<a class="ans_tag" href="{% url 'question_answers' question.id  %}">answer (<span>3</span>)</a>
 				</div>
 				<div class="col">
 					<span class="ans_tag">Tags:</span>
