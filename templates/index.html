@@ -7,8 +7,11 @@
 {% endblock header %}
 
 {% block content %}
-    {% include 'inc/one_question.html' %}
-    {% include 'inc/one_question.html' %}
-    {% include 'inc/one_question.html' %}
+    {% for question in questions %}
+        {% include 'inc/one_question.html' %}
+    {% endfor %}
 {% endblock content %}
 
+{% block right %}
+    {% include 'inc/tags_section.html' %} 
+{% endblock right %}

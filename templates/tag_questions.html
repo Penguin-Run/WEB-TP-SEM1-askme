@@ -2,10 +2,13 @@
 {% load static %}
 
 {% block header %}
-    <span id="page_header">Tag: <span>bender</span></span>
+    <span id="page_header">Tag: <span>{{ tag }}</span></span>
 {% endblock header %}
 
 {% block content %}
     {% include 'inc/one_question.html' %}
 {% endblock content %}
 
+{% block right %}
+    {% include 'inc/tags_section.html' %}     
+{% endblock right %}

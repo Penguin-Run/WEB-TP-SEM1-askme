@@ -7,16 +7,16 @@
 	</div>
 	<div class="col-9">
 		<div class="question_box_right">
-			<div class="question-title">Best question?</div>
-			<div class="question-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...</div>
+			<div class="question-title">{{ question.title }}</div>
+			<div class="question-text">{{ question.text }}</div>
 			<div class="row">
 				<div class="col">
-					<a href="">answer answer (<span>3</span>)</a>
+					<a class="ans_tag" href="">answer (<span>3</span>)</a>
 				</div>
 				<div class="col">
 					<span class="ans_tag">Tags:</span>
-					<a class="ans_tag" href="">black-jack</a>
-					<a class="ans_tag" href="">bender</a>
+					<a class="ans_tag" href="{% url 'tag' tags.tag_1  %}">{{ tags.tag_1 }}</a>
+					<a class="ans_tag" href="{% url 'tag' tags.tag_2  %}">{{ tags.tag_2 }}</a>
 				</div>
 			</div>
 		</div>
