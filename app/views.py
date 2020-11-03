@@ -17,11 +17,19 @@ tags = { 1:'bender',
          5:'django',
        }
 
+best_members = {
+	1:'Mr.Freeman', 
+    2:'Dr.House', 
+    3:'Bender', 
+    4:'Queen Victoria', 
+}
+
 
 def new_questions(request):
 	return render(request, 'index.html', {
         'questions': questions,
         'tags':tags,
+        'members':best_members,
     })
 
 
@@ -31,6 +39,7 @@ def tag_questions(request, string):
 		'questions': questions_for_this_tag,
 	    'tags':tags,
 		'tag': string,
+		'members':best_members,
 		})
 
 def hot_questions(request):
@@ -38,6 +47,7 @@ def hot_questions(request):
 	return render(request, 'hot_questions.html', {
         'questions': hot_questions,
         'tags':tags,
+        'members':best_members,
     })
 
 def ask_question(request):
