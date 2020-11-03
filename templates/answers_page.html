@@ -12,13 +12,14 @@
         </div>
         <div class="col-9">
             <div class="question_box_right">
-                <div class="question-title">Best question?</div>
-                <div >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...</div>
+                <div class="question-title">{{ question.title }}</div>
+                <div >{{ question.text }}</div>
                 <div class="row">
                     <div class="col">
                         <span class="ans_tag">Tags:</span>
-                        <a class="ans_tag" href="">black-jack</a>
-                        <a class="ans_tag" href="">bender</a>
+                        {% for tag in question.tags %}
+                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.1 }}</a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

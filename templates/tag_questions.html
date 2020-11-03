@@ -6,7 +6,9 @@
 {% endblock header %}
 
 {% block content %}
-    {% include 'inc/one_question.html' %}
+    {% for question in questions %}
+        {% include 'inc/one_question.html' %}
+    {% endfor %}
 {% endblock content %}
 
 {% block right %}

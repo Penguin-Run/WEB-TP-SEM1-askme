@@ -6,16 +6,16 @@ questions = [
 		'id': idx, 
 		'title': f'Best question? #{idx}',
 		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
+		'tags': [1, 4]
 	} for idx in range(7)
 ]
 
-tags = { 'tag_1':'bender', 
-         'tag_2':'black-jack', 
-         'tag_3':'perl', 
-         'tag_4':'MySQL', 
-         'tag_5':'django',
+tags = { 1:'bender', 
+         2:'black-jack', 
+         3:'perl', 
+         4:'MySQL', 
+         5:'django',
        }
-
 
 
 def new_questions(request):
@@ -24,8 +24,21 @@ def new_questions(request):
         'tags':tags,
     })
 
+
+def tag_questions(request, string):
+	questions_for_this_tag = questions
+	return render(request, 'tag_questions.html', {
+		'questions': questions_for_this_tag,
+	    'tags':tags,
+		'tag': string,
+		})
+
 def hot_questions(request):
-	return render(request, 'index.html', {})
+	hot_questions = questions
+	return render(request, 'hot_questions.html', {
+        'questions': hot_questions,
+        'tags':tags,
+    })
 
 def ask_question(request):
 	return render(request, 'add_question_form.html', {})
@@ -33,13 +46,8 @@ def ask_question(request):
 def question_answers(request, question_id):
 	question = questions[question_id]
 	return render(request, 'answers_page.html', {
-		'question': question
-		})
-
-# TEMP!!!!
-def answers(request):
-	return render(request, 'answers_page.html', {
-		'tags':tags
+		'question': question,
+		'tags':tags,
 		})
 
 def login(request):
@@ -50,10 +58,3 @@ def sign_up(request):
 
 def settings(request):
 	return render(request, 'settings.html', {})
-
-def tag_questions(request, string):
-	return render(request, 'tag_questions.html', {
-		'questions': questions,
-        'tags':tags,
-		'tag': string,
-		})
