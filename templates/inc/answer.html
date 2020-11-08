@@ -2,8 +2,14 @@
 
 <div class="row question-box">
     <div class="col-3 question_box_left">
-        <img class="question-img" src="{% static "img/111.jpg" %}">
-        <input type="number" name="number" class="number_edit" placeholder="1">
+        <div class="row">
+            <img src="{% static "img/111.jpg" %}" alt="My image" class="question-img">
+        </div>
+        <div class="row like_widget">
+            <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">
+            <div class="bd-highlight like-status">5</div>
+            <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/dislike.jpg' %}" height="24">
+        </div>
     </div>
     <div class="col-9">
         <div class="question_box_right">

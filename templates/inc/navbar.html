@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="{% url 'index' %}">Ask Me</a>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-        <form class="form-inline mt-2 mt-md-0">
+        <form class="form-inline mt-2 mt-md-0" action="{% url 'ask_question' %}">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ask!</button>
         </form>

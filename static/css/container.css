@@ -10,12 +10,21 @@
 	max-width: 70px;
 }
 
+.like_widget {
+	margin-left: 10px;
+    margin-top: 5px;
+}
+
 #main_question_img {
 	margin-left: 15px;
 	margin-top: 15px;
 	width: 150px;
 	width: 150px;
 	padding: 0px;
+}
+
+#main_question_like_widget {
+	margin-left: 30px;
 }
 
 #alert_message {

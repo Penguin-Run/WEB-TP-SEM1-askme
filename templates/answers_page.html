@@ -6,10 +6,16 @@
 
 {% block content %}
     <div class="row main_question">
-        <div class="col-3 question_box_left">
-            <img id="main_question_img" src="{% static "img/111.jpg" %}">
-            <input type="number" name="number" class="number_edit_main_answer" placeholder="1">
+    <div class="col-3 question_box_left">
+        <div class="row">
+            <img id="main_question_img" src="{% static "img/111.jpg" %}" alt="My image" class="question-img">
         </div>
+        <div id="main_question_like_widget" class="row like_widget">
+            <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">
+            <div class="bd-highlight like-status">5</div>
+            <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/dislike.jpg' %}" height="24">
+        </div>
+    </div>
         <div class="col-9">
             <div class="question_box_right">
                 <div class="question-title">{{ question.title }}</div>

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
 
 questions = [
@@ -6,14 +7,18 @@ questions = [
 		'id': idx, 
 		'title': f'Best question? #{idx}',
 		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
-		'tags': [1, 4]
-	} for idx in range(7)
+		'tags': [1, 4],
+		'likes': 5,
+	} for idx in range(9)
 ]
 
 
-def new_questions(request):
+def new_questions(request, pk = 1):
+	question_pages = Paginator(questions, 4)
+	# TODO: обработка случая pk > page number
 	return render(request, 'index.html', {
-        'questions': questions,
+        'questions': question_pages.page(pk),
+        'number_of_pages': question_pages.num_pages
     })
 
 
