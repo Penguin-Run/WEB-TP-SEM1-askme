@@ -33,8 +33,9 @@
     </div>
     <hr/>
 
-    {% include 'inc/answer.html' %}
-    {% include 'inc/answer.html' %}
+    {% for answer in answers_pages %}
+        {% include 'inc/answer.html' %}
+    {% endfor %}
 
     <hr/>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Guys, i have trouble with a moon park. Can't find the black-jack..."></textarea>
@@ -45,6 +46,3 @@
 {% block right %}
     {% include 'inc/tags_section.html' %}
 {% endblock right %}
-
-{% block page_btns %}
-{% endblock page_btns %}
