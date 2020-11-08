@@ -45,12 +45,19 @@ def hot_questions(request, pk = 1):
         'pages': pages_num
     })
 
-def tag_questions(request, string):
+def tag_questions(request, string, pk = 1):
 	questions_for_this_tag = questions
+	question_pages = Paginator(questions_for_this_tag, 4)
+	# TODO: обработка случая pk > page number
+
+	pages_num = []
+	for i in range(1, question_pages.num_pages + 1):
+		pages_num.append(i)
 	return render(request, 'tag_questions.html', {
-		'questions': questions_for_this_tag,
-		'tag': string,
-		})
+        'questions': question_pages.page(pk),
+        'pages': pages_num,
+        'tag': string,
+    })
 
 def question_answers(request, question_id, pk = 1):
 	question = questions[question_id]
