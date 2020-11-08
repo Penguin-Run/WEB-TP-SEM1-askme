@@ -16,9 +16,13 @@ questions = [
 def new_questions(request, pk = 1):
 	question_pages = Paginator(questions, 4)
 	# TODO: обработка случая pk > page number
+
+	pages_num = []
+	for i in range(1, question_pages.num_pages + 1):
+		pages_num.append(i)
 	return render(request, 'index.html', {
         'questions': question_pages.page(pk),
-        'number_of_pages': question_pages.num_pages
+        'pages': pages_num
     })
 
 
