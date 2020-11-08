@@ -57,9 +57,13 @@ def question_answers(request, question_id, pk = 1):
 
 	answers_pages = Paginator(question['answers'], 4)
 
+	pages_num = []
+	for i in range(1, answers_pages.num_pages + 1):
+		pages_num.append(i)
 	return render(request, 'answers_page.html', {
 		'question': question,
 		'answers_pages': answers_pages.page(pk),
+		'pages': pages_num,
 		})
 
 def ask_question(request):

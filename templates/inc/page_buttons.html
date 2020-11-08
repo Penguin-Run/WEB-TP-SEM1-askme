@@ -1,4 +1,6 @@
 {% for page in pages %}
-    <button type="button" class="page_btn btn btn-outline-secondary">{{ page }}</button>
+<!-- TODO: сделать правильное добавление номера страницы к ссылке -->
+    <a  href="{{ page }}/">
+    	<button type="button" class="page_btn btn btn-outline-secondary">{{ page }}</button>
+    </a>
 {% endfor %}
-<button type="button" class="page_btn but btn btn-outline-secondary">...</button>
