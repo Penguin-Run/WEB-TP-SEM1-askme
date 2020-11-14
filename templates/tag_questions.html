@@ -6,7 +6,7 @@
 {% endblock header %}
 
 {% block content %}
-    {% for question in questions %}
+    {% for question in page_obj %}
         {% include 'inc/one_question.html' %}
     {% endfor %}
 {% endblock content %}

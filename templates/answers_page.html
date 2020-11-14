@@ -23,9 +23,10 @@
                 <div class="row">
                     <div class="col">
                         <span class="ans_tag">Tags:</span>
-                        {% for tag in question.tags %}
-                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.1 }}</a>
-                        {% endfor %}
+                            <!-- doesn't work!!! -->
+                            <!-- <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.question.tags }}</a>  -->
+                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.2 }}</a> 
+                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.5 }}</a> 
                     </div>
                 </div>
             </div>
@@ -33,7 +34,7 @@
     </div>
     <hr/>
 
-    {% for answer in answers_pages %}
+    {% for answer in page_obj %}
         {% include 'inc/answer.html' %}
     {% endfor %}
 
@@ -46,3 +47,7 @@
 {% block right %}
     {% include 'inc/tags_section.html' %}
 {% endblock right %}
+
+{% block page_btns %}
+    {% include 'inc/pagination.html' %}
+{% endblock page_btns %}
