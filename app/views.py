@@ -1,5 +1,15 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+import random
+
+NUMBER_OF_QUESTIONS = 27
+
+tags = { 1:'bender', 
+		2:'black-jack', 
+		3:'perl', 
+		4:'MySQL', 
+		5:'django',
+	}
 
 sample_question_answers = [
 	{
@@ -13,10 +23,11 @@ questions = [
 		'id': idx, 
 		'title': f'Best question? #{idx}',
 		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
-		'tags': [1, 4],
+		# выбирает случайный тэг из dict tags. !!! dict tags дублируется здесь и в context processors!! TODO: исправить
+		'tags': random.choice(list(range(1, 6))), 
 		'likes': 5,
 		'answers': sample_question_answers,
-	} for idx in range(9)
+	} for idx in range(NUMBER_OF_QUESTIONS)
 ]
 
 
@@ -46,7 +57,11 @@ def hot_questions(request, pk = 1):
     })
 
 def tag_questions(request, string, pk = 1):
-	questions_for_this_tag = questions
+	questions_for_this_tag = []
+	for i in range(NUMBER_OF_QUESTIONS):
+		if tags.get(questions[i]['tags']) == string:
+			questions_for_this_tag.append(questions[i])
+
 	question_pages = Paginator(questions_for_this_tag, 4)
 	# TODO: обработка случая pk > page number
 
