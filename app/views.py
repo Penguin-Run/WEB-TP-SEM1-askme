@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 import random
+from app.models import Question
+from app.models import Answer
 
 NUMBER_OF_QUESTIONS = 27
 
@@ -39,14 +41,15 @@ def paginate(request, object_list, per_page=3):
 
 
 def new_questions(request, pk = 1):
-	question_pages = paginate(request, questions)
+	new_questions = Question.objects.new_questions()
+	question_pages = paginate(request, new_questions)
 
 	return render(request, 'index.html', {
         'page_obj': question_pages,
     })
 
 def hot_questions(request, pk = 1):
-	hot_questions = questions
+	hot_questions = Question.objects.best_questions()
 	question_pages = paginate(request, hot_questions)
 
 	return render(request, 'hot_questions.html', {
@@ -54,10 +57,7 @@ def hot_questions(request, pk = 1):
     })
 
 def tag_questions(request, string):
-	questions_for_this_tag = []
-	for i in range(NUMBER_OF_QUESTIONS):
-		if tags.get(questions[i]['tags']) == string:
-			questions_for_this_tag.append(questions[i])
+	questions_for_this_tag = Question.objects.filter(tags__name = string)
 
 	page_obj = paginate(request, questions_for_this_tag)
 
@@ -68,8 +68,9 @@ def tag_questions(request, string):
 
 def question_answers(request, question_id, pk = 1):
 	question = questions[question_id]
+	question_answers = Answer.objects.filter(question__id = question_id)
 
-	page_obj = paginate(request, question['answers'])
+	page_obj = paginate(request, question_answers)
 	return render(request, 'answers_page.html', {
 		'page_obj': page_obj,
 		'question': question,
