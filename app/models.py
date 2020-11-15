@@ -1,18 +1,45 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.fields import GenericRelation
 
-
-class User(models.Model):
+class Profile(models.Model):
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
 	email = models.EmailField(verbose_name = 'E-mail')
 	# поле для хранения аватарки ImageField ?
-	# поле для хранения пароля ??
 
 	def __str__(self):
 		return self.user_name
 
 	class Meta:
+		verbose_name = 'Профиль'
+		verbose_name_plural = 'Профили'
+
+class User(models.Model):
+	author = models.OneToOneField('Profile', on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.author.user_name
+
+	class Meta:
 		verbose_name = 'Пользователь'
 		verbose_name_plural = 'Пользователи'
+
+
+class Mark(models.Model):
+	class MarkType(models.TextChoices):
+		LIKE = 'LIKE', _('Like')
+		DISLIKE = 'DIS', _('Dislike')
+
+	mark_type = models.CharField(max_length = 4, choices = MarkType.choices, default = MarkType.LIKE)
+
+	content_type = models.ForeignKey(ContentType, on_delete = models.CASCADE)
+	object_id = models.PositiveIntegerField()
+	content_object = GenericForeignKey()
+
+	user = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
+
 
 class QuestionManager(models.Manager):
 	def new_questions(self):
@@ -28,6 +55,8 @@ class Question(models.Model):
 	rating = models.IntegerField(verbose_name = 'Рейтинг')
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
+
+	marks = GenericRelation(Mark)
 	
 	objects = QuestionManager()
 
@@ -55,6 +84,8 @@ class Answer(models.Model):
 	question = models.ForeignKey('Question', on_delete = models.CASCADE, verbose_name = 'Вопрос')
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 
+	marks = GenericRelation(Mark)
+
 	objects = AnswerManager()
 
 	def __str__(self):
@@ -74,5 +105,8 @@ class Tag(models.Model):
 	class Meta:
 		verbose_name = 'Тэг'
 		verbose_name_plural = 'Тэги'
+
+
+
 
 
