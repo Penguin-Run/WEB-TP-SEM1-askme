@@ -32,6 +32,9 @@ class User(models.Model):
 		verbose_name = 'Пользователь'
 		verbose_name_plural = 'Пользователи'
 
+class MarkManager(models.Manager):
+	def count_rating(self):
+		return self.filter(mark_type = Mark.MarkType.LIKE).count() - self.filter(mark_type = Mark.MarkType.DISLIKE).count()
 
 class Mark(models.Model):
 	class MarkType(models.TextChoices):
@@ -46,10 +49,18 @@ class Mark(models.Model):
 
 	user = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 
+	objects = MarkManager()
+
+	def __str__(self):
+		return self.mark_type
+
+	class Meta:
+		verbose_name = 'Оценка'
+		verbose_name_plural = 'Оценки'
 
 class QuestionManager(models.Manager):
 	def new_questions(self):
-		return self.order_by('-date_create', '-rating')
+		return self.all().prefetch_related('marks').order_by('-date_create', '-rating')
 
 	def best_questions(self):
 		return self.order_by('-rating', '-date_create')

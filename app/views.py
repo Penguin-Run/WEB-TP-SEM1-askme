@@ -26,8 +26,8 @@ questions = [
 		'title': f'Best question? #{idx}',
 		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
 		# выбирает случайный тэг из dict tags. !!! dict tags дублируется здесь и в context processors!! TODO: исправить
-		# явялется числом хотя должен формировать массив. TODO:Исправить!!
-		'tags': random.choice(list(range(1, 6))), 
+		# явялется числом хотя должен формировать массив. TODO: Исправить!!
+		'tags': random.choice(list(range(1, 6))),
 		'likes': 5,
 		'answers': sample_question_answers,
 	} for idx in range(NUMBER_OF_QUESTIONS)
