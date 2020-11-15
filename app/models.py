@@ -68,6 +68,9 @@ class QuestionManager(models.Manager):
 	def questions_by_tag(self, tag):
 		return self.filter(tags__name = tag)
 
+	def question_by_id(self, question_id):
+		return self.get(pk=question_id)
+
 class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')

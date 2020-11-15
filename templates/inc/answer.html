@@ -7,7 +7,7 @@
         </div>
         <div class="row like_widget">
             <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">
-            <div class="bd-highlight like-status">5</div>
+            <div class="bd-highlight like-status"> {{ answer.marks.count_rating }} </div>
             <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/dislike.jpg' %}" height="24">
         </div>
     </div>

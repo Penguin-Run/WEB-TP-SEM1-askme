@@ -12,7 +12,7 @@
         </div>
         <div id="main_question_like_widget" class="row like_widget">
             <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">
-            <div class="bd-highlight like-status">5</div>
+            <div class="bd-highlight like-status"> {{ question.marks.count_rating }} </div>
             <img class="btn btn-primary btn-sm btn-light" src="{% static 'img/dislike.jpg' %}" height="24">
         </div>
     </div>
@@ -23,10 +23,9 @@
                 <div class="row">
                     <div class="col">
                         <span class="ans_tag">Tags:</span>
-                            <!-- doesn't work!!! -->
-                            <!-- <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.question.tags }}</a>  -->
-                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.2 }}</a> 
-                            <a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.5 }}</a> 
+                            {% for tag in question.tags.get_all_tags %}
+                                <a class="ans_tag" href="{% url 'tag' tag  %}">{{ tag }}</a>
+                            {% endfor %}
                     </div>
                 </div>
             </div>

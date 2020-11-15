@@ -66,7 +66,7 @@ def tag_questions(request, tag):
     })
 
 def question_answers(request, question_id):
-	question = questions[question_id]
+	question = Question.objects.question_by_id(question_id)
 	question_answers = Answer.objects.question_answers(question_id)
 
 	page_obj = paginate(request, question_answers)
