@@ -6,9 +6,9 @@
 			<img src="{% static "img/111.jpg" %}" alt="My image" class="question-img">
 		</div>
 		<div class="row like_widget">
-			<img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">
-			<div class="bd-highlight like-status">5</div>
-			<img class="btn btn-primary btn-sm btn-light" src="{% static 'img/dislike.jpg' %}" height="24">
+			<button id="up_down_bote_btn" type="button" class="page_btn btn btn-outline-secondary">&uarr;</button>
+			<span class="bd-highlight like-status"> 5 </span>
+			<button id="up_down_bote_btn" type="button" class="page_btn btn btn-outline-secondary">&darr;</button>
 		</div>
 	</div>
 	<div class="col-9">
@@ -21,8 +21,9 @@
 				</div>
 				<div class="col">
 					<span class="ans_tag">Tags:</span>
-					<a class="ans_tag" href="{% url 'tag' tags.1  %}">{{ tags.1 }}</a>
-					<a class="ans_tag" href="{% url 'tag' tags.2  %}">{{ tags.2 }}</a>
+					{% for tag in question.tags.get_all_tags %}
+            			<a class="ans_tag" href="{% url 'tag' tag  %}">{{ tag }}</a>
+        			{% endfor %}
 				</div>
 			</div>
 		</div>
