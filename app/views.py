@@ -56,19 +56,18 @@ def hot_questions(request):
         'page_obj': question_pages,
     })
 
-def tag_questions(request, string):
-	questions_for_this_tag = Question.objects.filter(tags__name = string)
-
+def tag_questions(request, tag):
+	questions_for_this_tag = Question.objects.questions_by_tag(tag)
 	page_obj = paginate(request, questions_for_this_tag)
 
 	return render(request, 'tag_questions.html', {
         'page_obj': page_obj,
-        'tag': string,
+        'tag': tag,
     })
 
 def question_answers(request, question_id):
 	question = questions[question_id]
-	question_answers = Answer.objects.filter(question__id = question_id)
+	question_answers = Answer.objects.question_answers(question_id)
 
 	page_obj = paginate(request, question_answers)
 	return render(request, 'answers_page.html', {

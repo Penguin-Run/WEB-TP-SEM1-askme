@@ -48,6 +48,9 @@ class QuestionManager(models.Manager):
 	def best_questions(self):
 		return self.order_by('-rating', '-date_create')
 
+	def questions_by_tag(self, tag):
+		return self.filter(tags__name = tag)
+
 class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')
@@ -69,11 +72,8 @@ class Question(models.Model):
 
 
 class AnswerManager(models.Manager):
-	def answers_by_date(self):
-		return self.order_by('-date_create', '-rating')
-
-	def best_answers(self):
-		return self.order_by('-rating', '-date_create')
+	def question_answers(self, question_id):
+		return self.filter(question__id = question_id).order_by('-rating', '-date_create')
 
 
 class Answer(models.Model):
