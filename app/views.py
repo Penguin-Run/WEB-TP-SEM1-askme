@@ -40,7 +40,7 @@ def paginate(request, object_list, per_page=3):
     return page_obj
 
 
-def new_questions(request, pk = 1):
+def new_questions(request):
 	new_questions = Question.objects.new_questions()
 	question_pages = paginate(request, new_questions)
 
@@ -48,7 +48,7 @@ def new_questions(request, pk = 1):
         'page_obj': question_pages,
     })
 
-def hot_questions(request, pk = 1):
+def hot_questions(request):
 	hot_questions = Question.objects.best_questions()
 	question_pages = paginate(request, hot_questions)
 
@@ -66,7 +66,7 @@ def tag_questions(request, string):
         'tag': string,
     })
 
-def question_answers(request, question_id, pk = 1):
+def question_answers(request, question_id):
 	question = questions[question_id]
 	question_answers = Answer.objects.filter(question__id = question_id)
 
