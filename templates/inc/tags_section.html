@@ -3,7 +3,7 @@
         <span class="row tags_header">Tags</span>
     </div>
     <div class="row link_tags">
-        {% for tag in tags.values %}
+        {% for tag in tags %}
             <a class="sample_tag lang_tag" href="{% url 'tag' tag  %}">{{ tag }}</a>
         {% endfor %}
     </div>
@@ -13,7 +13,7 @@
         <span class="row tags_header">Best Members</span>
     </div>
     <div class="row link_tags">
-        {% for member in members.values %}
+        {% for member in members %}
             <a class="sample_tag" href="">{{ member }}</a>
         {% endfor %}
     </div>

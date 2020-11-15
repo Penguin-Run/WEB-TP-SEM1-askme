@@ -16,8 +16,14 @@ class Profile(models.Model):
 		verbose_name = 'Профиль'
 		verbose_name_plural = 'Профили'
 
+class UserManager(models.Manager):
+	def get_all_users(self):
+		return self.all()
+
 class User(models.Model):
 	author = models.OneToOneField('Profile', on_delete=models.CASCADE)
+
+	objects = UserManager()
 
 	def __str__(self):
 		return self.author.user_name
@@ -96,8 +102,14 @@ class Answer(models.Model):
 		verbose_name_plural = 'Ответы'
 
 
+class TagManager(models.Manager):
+	def get_all_tags(self):
+		return self.all()
+
 class Tag(models.Model):
 	name = models.CharField(max_length = 256, verbose_name = 'Название тэга')
+
+	objects = TagManager()
 
 	def __str__(self):
 		return self.name
