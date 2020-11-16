@@ -4,35 +4,6 @@ import random
 from app.models import Question
 from app.models import Answer
 
-NUMBER_OF_QUESTIONS = 27
-
-tags = { 1:'bender', 
-		2:'black-jack', 
-		3:'perl', 
-		4:'MySQL', 
-		5:'django',
-	}
-
-sample_question_answers = [
-	{
-		'id': idx,
-		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
-	} for idx in range(7)
-]
-
-questions = [
-	{
-		'id': idx, 
-		'title': f'Best question? #{idx}',
-		'text': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the...',
-		# выбирает случайный тэг из dict tags. !!! dict tags дублируется здесь и в context processors!! TODO: исправить
-		# явялется числом хотя должен формировать массив. TODO: Исправить!!
-		'tags': random.choice(list(range(1, 6))),
-		'likes': 5,
-		'answers': sample_question_answers,
-	} for idx in range(NUMBER_OF_QUESTIONS)
-]
-
 def paginate(request, object_list, per_page=3):
     paginator = Paginator(object_list, per_page)
     page_number = request.GET.get('page')
