@@ -86,6 +86,9 @@ class Question(models.Model):
 	def __str__(self):
 		return self.title
 
+	def count_answers(self):
+		return Answer.objects.question_answers(self.pk).count()
+
 	class Meta:
 		verbose_name = 'Вопрос'
 		verbose_name_plural = 'Вопросы'
