@@ -4,10 +4,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
 
+# TODO: implement sorting by rating
+
 class Profile(models.Model):
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
 	email = models.EmailField(verbose_name = 'E-mail')
-	# поле для хранения аватарки ImageField ?
+	# image = models.ImageField(upload_to='static/img/', default = '111.jpg', blank=True)
 
 	def __str__(self):
 		return self.user_name
@@ -60,10 +62,12 @@ class Mark(models.Model):
 
 class QuestionManager(models.Manager):
 	def new_questions(self):
-		return self.all().prefetch_related('marks').order_by('-date_create', '-rating')
+		# return self.all().prefetch_related('marks').order_by('-date_create', '-rating')
+		return self.all().prefetch_related('marks').order_by('-date_create')
 
 	def best_questions(self):
-		return self.order_by('-rating', '-date_create')
+		# return self.order_by('-rating', '-date_create')
+		return self.order_by('-date_create')
 
 	def questions_by_tag(self, tag):
 		return self.filter(tags__name = tag)
@@ -75,7 +79,6 @@ class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')
 	date_create = models.DateField(auto_now_add=True, verbose_name = 'Дата создания')
-	rating = models.IntegerField(verbose_name = 'Рейтинг')
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
 
@@ -96,12 +99,12 @@ class Question(models.Model):
 
 class AnswerManager(models.Manager):
 	def question_answers(self, question_id):
-		return self.filter(question__id = question_id).order_by('-rating', '-date_create')
+		# return self.filter(question__id = question_id).order_by('-rating', '-date_create')
+		return self.filter(question__id = question_id).order_by('-date_create')
 
 
 class Answer(models.Model):
 	text = models.TextField(verbose_name = 'Текст')
-	rating = models.IntegerField(verbose_name = 'Рейтинг')
 	date_create = models.DateField(auto_now_add=True, verbose_name = 'Дата создания')
 	is_correct = models.BooleanField(default=False, verbose_name = 'Правильность')
 	question = models.ForeignKey('Question', on_delete = models.CASCADE, verbose_name = 'Вопрос')
