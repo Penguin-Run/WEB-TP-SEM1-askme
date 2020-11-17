@@ -24,6 +24,10 @@ class UserManager(models.Manager):
 	def get_all_users(self):
 		return self.all()
 
+	def get_best_users(self):
+		# TODO: implement logic of best members
+		return self.all()[:15]
+
 class User(models.Model):
 	author = models.OneToOneField('Profile', on_delete=models.CASCADE)
 
@@ -127,6 +131,10 @@ class Answer(models.Model):
 class TagManager(models.Manager):
 	def get_all_tags(self):
 		return self.all()
+
+	def get_best_tags(self):
+		# TODO: implement logic of best tags
+		return self.all()[:25]
 
 class Tag(models.Model):
 	name = models.CharField(max_length = 256, unique = True, verbose_name = 'Название тэга')

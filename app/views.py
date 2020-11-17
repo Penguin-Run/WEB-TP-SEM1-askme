@@ -4,7 +4,7 @@ import random
 from app.models import Question
 from app.models import Answer
 
-def paginate(request, object_list, per_page=3):
+def paginate(request, object_list, per_page = 5):
     paginator = Paginator(object_list, per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
