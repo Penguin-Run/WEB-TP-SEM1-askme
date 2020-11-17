@@ -3,7 +3,7 @@
 <div class="row question-box">
 	<div class="col-3 question_box_left">
 		<div class="row">
-			<img src="../../static/img/{{ question.author.author.image }}" alt="My image" class="question-img">
+			<img src="{{ question.author.author.image.url }}" alt="My image" class="question-img">
 		</div>
 		<div class="row like_widget">
 			<img class="btn btn-primary btn-sm btn-light" src="{% static 'img/like.jpg' %}" height="24">

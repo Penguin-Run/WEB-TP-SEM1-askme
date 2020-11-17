@@ -71,8 +71,10 @@ class Command(BaseCommand):
 
     def generate_users(self, cnt):
         for i in range(cnt):
+            num_ava = f.random_int(min=1, max=17)
             profile = Profile.objects.create(
-                user_name = f.name()
+                user_name = f.name(),
+                image = f'/static/media/image/avatar/test{num_ava}.jpg'
             )
             User.objects.create(
                 author_id = profile.id
