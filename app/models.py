@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
 
 # TODO: implement sorting by rating !!!
-# TODO: сделать в шаблонах максимальное количество данных отображения + обрезание текста
 # TODO: сделать запрет на добавение много лайков и прочего через unique(?)
 
 class Profile(models.Model):
@@ -73,7 +72,7 @@ class QuestionManager(models.Manager):
 
 	def best_questions(self):
 		# return self.order_by('-rating', '-date_create')
-		return self.order_by('-date_create')
+		return self.all().prefetch_related('marks').order_by('-rating')
 
 	def questions_by_tag(self, tag):
 		return self.filter(tags__name = tag)
