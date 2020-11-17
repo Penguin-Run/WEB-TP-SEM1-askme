@@ -4,7 +4,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
 
-# TODO: implement sorting by rating
+# TODO: implement sorting by rating !!!
+# TODO: сделать в шаблонах максимальное количество данных отображения + обрезание текста
+# TODO: сделать запрет на добавение много лайков и прочего через unique(?)
 
 class Profile(models.Model):
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
@@ -78,7 +80,7 @@ class QuestionManager(models.Manager):
 class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')
-	date_create = models.DateField(auto_now_add=True, verbose_name = 'Дата создания')
+	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
 
