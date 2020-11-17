@@ -8,8 +8,8 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 class Profile(models.Model):
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
-	email = models.EmailField(verbose_name = 'E-mail')
-	image = models.ImageField(upload_to='static/img/', default = 'dislike.jpg', blank=True)
+	email = models.EmailField(verbose_name = 'E-mail', default = 'default@def.com', blank = True)
+	image = models.ImageField(upload_to='static/img/', default = '111.jpg', blank = True)
 
 	def __str__(self):
 		return self.user_name
@@ -127,7 +127,7 @@ class TagManager(models.Manager):
 		return self.all()
 
 class Tag(models.Model):
-	name = models.CharField(max_length = 256, verbose_name = 'Название тэга')
+	name = models.CharField(max_length = 256, unique = True, verbose_name = 'Название тэга')
 
 	objects = TagManager()
 
