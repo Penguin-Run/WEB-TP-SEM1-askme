@@ -72,7 +72,7 @@ class QuestionManager(models.Manager):
 
 	def best_questions(self):
 		# return self.order_by('-rating', '-date_create')
-		return self.all().prefetch_related('marks').order_by('-rating')
+		return self.all().prefetch_related('marks').order_by('-date_create')
 
 	def questions_by_tag(self, tag):
 		return self.filter(tags__name = tag)
