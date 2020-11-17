@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'askme.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'askme_db',
+        'USER' : 'askme_user',
+        'PASSWORD' : 'Basket2011',
+        'HOST' : '127.0.0.1',
+        'PORT' : '5432',
     }
 }
 

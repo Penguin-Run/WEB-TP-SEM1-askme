@@ -62,9 +62,13 @@ class Command(BaseCommand):
             'id', flat=True
         )
 
-        enum = [Mark.MarkType.LIKE, Mark.MarkType.DISLIKE]
+        if(f.random_int(min=1, max=10) > 2):
+            mark_type = Mark.MarkType.LIKE
+        else:
+            mark_type = Mark.MarkType.DISLIKE
+
         mark = Mark.objects.create(
-            mark_type = choice(enum),
+            mark_type = mark_type,
             content_object = mark_object,
             user_id = choice(users_ids)
         )
@@ -109,7 +113,7 @@ class Command(BaseCommand):
             for j in range(f.random_int(min=1, max=5)):
                 question.tags.add(choice(tags_ids))
 
-            for j in range(f.random_int(min=1, max=5)):
+            for j in range(f.random_int(min=10, max=50)):
                 self.generate_marks(question)
 
         self.fill_questions_with_answers(cnt*2, added_questions_ids)
@@ -132,7 +136,7 @@ class Command(BaseCommand):
                 question_id = choice(question_ids),
                 author_id = choice(users_ids),
             )
-            for j in range(f.random_int(min=1, max=5)):
+            for j in range(f.random_int(min=5, max=25)):
                 self.generate_marks(answer)
 
 
