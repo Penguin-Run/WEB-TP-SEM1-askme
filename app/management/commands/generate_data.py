@@ -2,13 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 from app.models import *
 from random import choice
 from faker import Faker
+from django.db import IntegrityError
 f = Faker()
-
-# TODO: сделать генерацию ответов и вопросов в виде отдельных команд 
-# (или решить проблему не заполнения созданных в данной команде вопросов ответами)
-
-# как вариант сделать добавление вопроса и наполнение его ответами в рамках одной функции 
-# и ее уже зацикливать
 
 class Command(BaseCommand):
     help = 'Generates Data'
@@ -85,9 +80,13 @@ class Command(BaseCommand):
 
     def generate_tags(self, cnt):
         for i in range(cnt):
-            Tag.objects.create(
-                name = f.word()
-            )
+            try:
+                Tag.objects.create(
+                    name = f.word()
+                )
+            except IntegrityError:
+                # TODO: залоггировать ошибку
+                a = 1
 
     def generate_questions(self, cnt):
         tags_ids = Tag.objects.values_list(
