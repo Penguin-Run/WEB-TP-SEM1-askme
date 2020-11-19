@@ -67,16 +67,21 @@ class Command(BaseCommand):
         else:
             mark_type = Mark.MarkType.DISLIKE
 
-        mark = Mark.objects.create(
-            mark_type = mark_type,
-            content_object = mark_object,
-            user_id = choice(users_ids)
-        )
-        if(mark_type == Mark.MarkType.LIKE):
-            mark_object.rating += 1
-        else:
-            mark_object.rating -= 1
-        mark_object.save()
+        try:
+            mark = Mark.objects.create(
+                mark_type = mark_type,
+                content_object = mark_object,
+                user_id = choice(users_ids)
+            )
+            if(mark_type == Mark.MarkType.LIKE):
+                mark_object.rating += 1
+            else:
+                mark_object.rating -= 1
+            mark_object.save()
+        except IntegrityError:
+            # catch попытки добавления пользователем повторной оценки
+            self.generate_marks(mark_object)
+
 
     def generate_users(self, cnt):
         for i in range(cnt):
@@ -96,6 +101,7 @@ class Command(BaseCommand):
                     name = f.word()
                 )
             except IntegrityError:
+                # catch попытки добавления существующего тэга
                 # TODO: залоггировать ошибку
                 a = 1
 
@@ -141,7 +147,7 @@ class Command(BaseCommand):
                 question_id = choice(question_ids),
                 author_id = choice(users_ids),
             )
-            for j in range(f.random_int(min=5, max=25)):
+            for j in range(f.random_int(min=1, max=int(cnt / 10))):
                 self.generate_marks(answer)
 
 
