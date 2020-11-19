@@ -73,11 +73,11 @@ class Mark(models.Model):
 class QuestionManager(models.Manager):
 	def new_questions(self):
 		# return self.all().prefetch_related('marks').order_by('-date_create', '-rating')
-		return self.all().prefetch_related('marks').order_by('-date_create')
+		return self.all().prefetch_related('author').order_by('-date_create')
 
 	def best_questions(self):
 		# return self.order_by('-rating', '-date_create')
-		return self.all().prefetch_related('marks').order_by('-date_create')
+		return self.all().prefetch_related('author').order_by('-rating')
 
 	def questions_by_tag(self, tag):
 		return self.filter(tags__name = tag)
@@ -92,6 +92,8 @@ class Question(models.Model):
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
 
+	# поле должно быть пересчитано при каждом новом добавлении оценки (Mark) этого вопроса
+	rating = models.IntegerField(default = 0, blank = True, verbose_name = 'Рейтинг')
 	marks = GenericRelation(Mark)
 	
 	objects = QuestionManager()
@@ -120,6 +122,8 @@ class Answer(models.Model):
 	question = models.ForeignKey('Question', on_delete = models.CASCADE, verbose_name = 'Вопрос')
 	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
 
+	# поле должно быть пересчитано при каждом новом добавлении оценки (Mark) этого ответа
+	rating = models.IntegerField(default = 0, blank = True, verbose_name = 'Рейтинг')
 	marks = GenericRelation(Mark)
 
 	objects = AnswerManager()

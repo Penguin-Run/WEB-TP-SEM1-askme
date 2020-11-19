@@ -62,7 +62,7 @@ class Command(BaseCommand):
             'id', flat=True
         )
 
-        if(f.random_int(min=1, max=10) > 2):
+        if(f.random_int(min=1, max=10) > 3):
             mark_type = Mark.MarkType.LIKE
         else:
             mark_type = Mark.MarkType.DISLIKE
@@ -72,6 +72,11 @@ class Command(BaseCommand):
             content_object = mark_object,
             user_id = choice(users_ids)
         )
+        if(mark_type == Mark.MarkType.LIKE):
+            mark_object.rating += 1
+        else:
+            mark_object.rating -= 1
+        mark_object.save()
 
     def generate_users(self, cnt):
         for i in range(cnt):
