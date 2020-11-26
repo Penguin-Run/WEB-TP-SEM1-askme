@@ -8,24 +8,17 @@
     <div class="row">
         <span id="alert_message">Sorry, wrong password(</span>
     </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Login</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Enter your login here">
+    <form class="form" method="POST" action="/login/" enctype="">
+        {{ form }}
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-8">
+                <button type="submit" class="page_btn btn btn-outline-secondary">Log in</button>
+            </div>
         </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Password</div>
-        <div class="col-8">
-            <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <button type="button" class="page_btn btn btn-outline-secondary">Log in</button>
-        </div>
-    </div>
+    </form>
+    
+    
     <div class="row" id="create_acc_link">
         <div class="col-4"></div>
         <div class="col-8">

@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 import random
+
 from app.models import Question
 from app.models import Answer
+
+from django.contrib import auth
+from app.forms import LoginForm
+
 
 def paginate(request, object_list, per_page = 5):
     paginator = Paginator(object_list, per_page)
@@ -51,8 +56,17 @@ def ask_question(request):
 		})
 
 def login(request):
-	return render(request, 'auth.html', {
-		})
+	if request.method == 'GET':
+		form = LoginForm()
+	else:
+		form = LoginForm(data=request.POST)
+		if form.is_valid():
+			user = auth.authenticate(request, **form.cleaned_data)
+			if user is not None:
+				auth.login(request, user)
+				return redirect("/") # TODO: сделать адаптивный редирект, чтобы возвращал туда откуда пришли на аутентифию
+	ctx = { 'form': form }
+	return render(request, 'auth.html', ctx)
 
 def sign_up(request):
 	return render(request, 'registration.html', {
