@@ -9,6 +9,7 @@
         <span id="alert_message">Sorry, wrong password(</span>
     </div>
     <form class="form" method="POST" action="/login/" enctype="">
+        {% csrf_token %}
         {{ form }}
         <div class="row">
             <div class="col-4"></div>

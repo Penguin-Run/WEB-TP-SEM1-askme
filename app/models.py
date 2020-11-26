@@ -1,13 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
 
-# TODO: implement sorting by rating !!!
-# TODO: сделать запрет на добавение много лайков и прочего через unique(?)
+class ProfileManager(models.Manager):
+	def get_all_users(self):
+ 		return self.all()
+
+	def get_best_users(self):
+ 		# TODO: implement logic of best members
+ 		return self.all()[:15]
 
 class Profile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
 	email = models.EmailField(verbose_name = 'E-mail', default = 'default@def.com', blank = True)
 	image = models.ImageField(
@@ -17,6 +24,8 @@ class Profile(models.Model):
         verbose_name='Аватарка'
     )
 
+	objects = ProfileManager()
+
 	def __str__(self):
 		return self.user_name
 
@@ -24,25 +33,25 @@ class Profile(models.Model):
 		verbose_name = 'Профиль'
 		verbose_name_plural = 'Профили'
 
-class UserManager(models.Manager):
-	def get_all_users(self):
-		return self.all()
+# class UserManager(models.Manager):
+# 	def get_all_users(self):
+# 		return self.all()
 
-	def get_best_users(self):
-		# TODO: implement logic of best members
-		return self.all()[:15]
+# 	def get_best_users(self):
+# 		# TODO: implement logic of best members
+# 		return self.all()[:15]
 
-class User(models.Model):
-	author = models.OneToOneField('Profile', on_delete=models.CASCADE)
+# class User(models.Model):
+# 	author = models.OneToOneField('Profile', on_delete=models.CASCADE)
 
-	objects = UserManager()
+# 	objects = UserManager()
 
-	def __str__(self):
-		return self.author.user_name
+# 	def __str__(self):
+# 		return self.author.user_name
 
-	class Meta:
-		verbose_name = 'Пользователь'
-		verbose_name_plural = 'Пользователи'
+# 	class Meta:
+# 		verbose_name = 'Пользователь'
+# 		verbose_name_plural = 'Пользователи'
 
 class MarkManager(models.Manager):
 	def count_rating(self):
@@ -59,7 +68,7 @@ class Mark(models.Model):
 	object_id = models.PositiveIntegerField()
 	content_object = GenericForeignKey()
 
-	user = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
+	user = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')
 
 	objects = MarkManager()
 
@@ -90,7 +99,7 @@ class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')
 	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
-	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
+	author = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
 
 	# поле должно быть пересчитано при каждом новом добавлении оценки (Mark) этого вопроса
@@ -121,7 +130,7 @@ class Answer(models.Model):
 	date_create = models.DateField(auto_now_add=True, verbose_name = 'Дата создания')
 	is_correct = models.BooleanField(default=False, verbose_name = 'Правильность')
 	question = models.ForeignKey('Question', on_delete = models.CASCADE, verbose_name = 'Вопрос')
-	author = models.ForeignKey('User', on_delete = models.CASCADE, verbose_name = 'Автор')
+	author = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')
 
 	# поле должно быть пересчитано при каждом новом добавлении оценки (Mark) этого ответа
 	rating = models.IntegerField(default = 0, blank = True, verbose_name = 'Рейтинг')
