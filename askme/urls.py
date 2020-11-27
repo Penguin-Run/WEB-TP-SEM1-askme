@@ -30,6 +30,7 @@ urlpatterns = [
     path('question/<int:question_id>/', views.question_answers, name='question_answers'),
 
     path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
     path('signup/', views.sign_up, name='signup'),
     path('settings/', views.settings, name='settings'),
 ]

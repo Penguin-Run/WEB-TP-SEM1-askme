@@ -1,5 +1,7 @@
 {% extends 'inc/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
+
 
 {% block content %}
     <div class="row">
@@ -10,22 +12,13 @@
     </div>
     <form class="form" method="POST" action="/login/" enctype="">
         {% csrf_token %}
-        {{ form }}
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-8">
-                <button type="submit" class="page_btn btn btn-outline-secondary">Log in</button>
-            </div>
-        </div>
+        {% bootstrap_form form %}
+
+        {% buttons %}
+            <button type="submit" class="page_btn btn btn-outline-secondary">Log in</button>
+        {% endbuttons %}
     </form>
-    
-    
-    <div class="row" id="create_acc_link">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <a href="{% url 'signup' %}">Create new account</a>
-        </div>
-    </div>
+    <a href="{% url 'signup' %}">Create new account</a>
 {% endblock content %}
 
 {% block right %}

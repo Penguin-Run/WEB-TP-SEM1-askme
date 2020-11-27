@@ -68,6 +68,10 @@ def login(request):
 	ctx = { 'form': form }
 	return render(request, 'auth.html', ctx)
 
+def logout(request):
+	auth.logout(request)
+	return redirect("/")
+
 def sign_up(request):
 	return render(request, 'registration.html', {
 		})
