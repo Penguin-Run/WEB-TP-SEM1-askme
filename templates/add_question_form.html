@@ -1,44 +1,20 @@
 {% extends 'inc/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block header %}
     <span id="new_questions_text">New question</span>
 {% endblock header %}
 
 {% block content %}
-    <div class="add_question_section">
-        <div class="row input_row">
-            <div class="col-2">
-                <span>Title</span>
-            </div>
-            <div class="col-10">
-                <input type="text" class="form-control" placeholder="How to build a moon park?">
-            </div>
-        </div>
-        <div class="row input_row">
-            <div class="col-2">
-                <span>Text</span>
-            </div>
-            <div class="col-10">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Guys, i have trouble with a moon park. Can't find the black-jack..."></textarea>
-            </div>
-        </div>
-        <div class="row input_row">
-            <div class="col-2">
-                <span>Tags</span>
-            </div>
-            <div class="col-10">
-                <input type="text" class="form-control" placeholder="black-jack, bender">
-            </div>
-        </div>
-        <div class="row input_row">
-            <div class="col-2">
-            </div>
-            <div class="col-10">
-                <button type="button" class="page_btn btn btn-outline-secondary">ASK!</button>
-            </div>
-        </div>
-    </div>
+    <form class="form" method="POST" novalidate>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% buttons %}
+            <button type="submit" class="page_btn btn btn-outline-secondary">ASK!</button>
+        {% endbuttons %}
+    </form>
 {% endblock content %}
 
 {% block right %}

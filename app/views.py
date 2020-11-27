@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.core.paginator import Paginator
 import random
 
@@ -6,7 +6,8 @@ from app.models import Question
 from app.models import Answer
 
 from django.contrib import auth
-from app.forms import LoginForm
+from django.contrib.auth.decorators import login_required
+from app.forms import LoginForm, AskForm
 
 
 def paginate(request, object_list, per_page = 5):
@@ -17,6 +18,9 @@ def paginate(request, object_list, per_page = 5):
 
 
 def new_questions(request):
+	# sample how to use data in session, sessions will be very handy for hw-4
+	print(f'HELLO: { request.session.get("hello") }')
+
 	new_questions = Question.objects.new_questions()
 	question_pages = paginate(request, new_questions)
 
@@ -51,9 +55,20 @@ def question_answers(request, question_id):
 		'question': question,
 		})
 
+@login_required
 def ask_question(request):
-	return render(request, 'add_question_form.html', {
-		})
+	if request.method == 'GET':
+		form = AskForm() # TODO: doesn't redirect back on ask form after logging in
+	else:
+		form = AskForm(data=request.POST)
+		if form.is_valid():
+			question = form.save(commit = False)
+			question.author = request.user.profile
+			question.save()
+			return redirect(reverse('question_answers', kwargs = {'question_id': question.pk}))
+
+	ctx = { 'form': form }
+	return render(request, 'add_question_form.html', ctx)
 
 def login(request):
 	if request.method == 'GET':
@@ -63,7 +78,11 @@ def login(request):
 		if form.is_valid():
 			user = auth.authenticate(request, **form.cleaned_data)
 			if user is not None:
+				# sample how to store data in sessions
+				request.session['hello'] = 'world'
+
 				auth.login(request, user)
+				# /?next = /polls/3
 				return redirect("/") # TODO: сделать адаптивный редирект, чтобы возвращал туда откуда пришли на аутентифию
 	ctx = { 'form': form }
 	return render(request, 'auth.html', ctx)

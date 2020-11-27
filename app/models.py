@@ -22,7 +22,7 @@ class Profile(models.Model):
 		default = 'static/media/image/avatar/200.jpeg',
         blank = True,
         verbose_name='Аватарка'
-    )
+    ) # TODO: browser can't find image
 
 	objects = ProfileManager()
 
@@ -82,11 +82,9 @@ class Mark(models.Model):
 
 class QuestionManager(models.Manager):
 	def new_questions(self):
-		# return self.all().prefetch_related('marks').order_by('-date_create', '-rating')
 		return self.all().prefetch_related('author').order_by('-date_create', '-rating')
 
 	def best_questions(self):
-		# return self.order_by('-rating', '-date_create')
 		return self.all().prefetch_related('author').order_by('-rating', '-date_create')
 
 	def questions_by_tag(self, tag):

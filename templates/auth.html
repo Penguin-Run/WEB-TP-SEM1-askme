@@ -10,7 +10,7 @@
     <div class="row">
         <span id="alert_message">Sorry, wrong password(</span>
     </div>
-    <form class="form" method="POST" action="/login/" enctype="">
+    <form class="form" method="POST" action="/login/">
         {% csrf_token %}
         {% bootstrap_form form %}
 
