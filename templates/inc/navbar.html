@@ -13,11 +13,12 @@
         <div class="profile_info">
             <span id="name">Ivan</span>
             <div class="header_profile_links">
-                <a  href="{% url 'settings' %}">settings</a>
                 {% if request.user.is_authenticated %}
+                    <a  href="{% url 'profile_edit' %}">profile</a>
                     <a class="" href="{% url 'logout' %}">logout</a>
                 {% else %}
                     <a class="" href="{% url 'login' %}">login</a>
+                    <a class="" href="{% url 'signup' %}">signup</a>
                 {% endif %}
             </div>
         </div>
