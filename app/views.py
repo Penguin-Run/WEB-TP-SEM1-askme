@@ -2,12 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.core.paginator import Paginator
 import random
 
-from app.models import Question
-from app.models import Answer
-
+from app.models import Question, Answer, Profile
+from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from app.forms import LoginForm, AskForm
+from app.forms import LoginForm, AskForm, CreateProfileForm, CreateUserForm
 
 
 def paginate(request, object_list, per_page = 5):
@@ -92,8 +91,29 @@ def logout(request):
 	return redirect("/")
 
 def sign_up(request):
-	return render(request, 'registration.html', {
-		})
+	if request.method == 'GET':
+		form_profile = CreateProfileForm()
+		form_user = CreateUserForm()
+	else:
+		data = request.POST
+		# TODO: return default image field value after validation, even if valid image value passed to form
+		profile_data = { 'image': data.get('image') }
+		user_data = { 'username': data.get('username'), 'email': data.get('email'), 'password': data.get('password') }
+		form_profile = CreateProfileForm(data = profile_data)
+		form_user = CreateUserForm(data = user_data)
+		if form_profile.is_valid() and form_user.is_valid():
+			data = form_user.cleaned_data
+			user = User.objects.create_user(username = data.get('username'), email = data.get('email'), password = data.get('password'))
+			profile = form_profile.save(commit = False)
+			profile.user = user
+			profile.user_name = data.get('username')
+			profile.email = data.get('email')
+			profile.save()
+			auth.login(request, user)
+			return redirect("/")
+
+	ctx = { 'form_profile': form_profile, 'form_user': form_user }
+	return render(request, 'registration.html', ctx)
 
 def settings(request):
 	return render(request, 'settings.html', {

@@ -1,5 +1,6 @@
 {% extends 'inc/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block content %}
     <div class="row">
@@ -8,48 +9,17 @@
     <div class="row">
         <span id="alert_message">Sorry, this email address already registered(</span>
     </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Login</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Enter your login here">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Email</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Enter your email here">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Nickname</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Enter your nickname here">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Password</div>
-        <div class="col-8">
-            <input type="password" class="form-control" id="inputPassword1" placeholder="Your password">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Repeat password</div>
-        <div class="col-8">
-            <input type="password" class="form-control" id="inputPassword2" placeholder="Your password">
-        </div>
-    </div>
-    <div class="row input_row" id="upload_avatar_input">
-        <div class="col-4 input_label">Upload avatar</div>
-        <div class="col-8">
-            <input type="file" class="form-control-file file_ad" id="upload_avatar_file_input">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <button type="button" class="page_btn btn btn-outline-secondary">Register</button>
-        </div>
-    </div>
+    
+    <form class="form" method="POST" action="/signup/">
+        {% csrf_token %}
+        {% bootstrap_form form_user %}
+        {% bootstrap_form form_profile %}
+
+        {% buttons %}
+            <button type="submit" class="page_btn btn btn-outline-secondary">Register</button>
+        {% endbuttons %}
+    </form>
+
 {% endblock content %}
 
 {% block right %}
