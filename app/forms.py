@@ -2,10 +2,19 @@ from django import forms
 from app.models import Question, Profile
 from django.contrib.auth.models import User
 
+class EditProfileForm(forms.ModelForm):
+	class Meta:
+		model = Profile
+		fields = ['user_name', 'email', 'image']
+
 class CreateUserForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ['username', 'email', 'password']
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['password'].widget = forms.PasswordInput()
 
 class CreateProfileForm(forms.ModelForm):
 	class Meta:

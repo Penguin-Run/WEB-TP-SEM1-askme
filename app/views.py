@@ -6,7 +6,7 @@ from app.models import Question, Answer, Profile
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from app.forms import LoginForm, AskForm, CreateProfileForm, CreateUserForm
+from app.forms import LoginForm, AskForm, CreateProfileForm, CreateUserForm, EditProfileForm
 
 
 def paginate(request, object_list, per_page = 5):
@@ -57,7 +57,7 @@ def question_answers(request, question_id):
 @login_required
 def ask_question(request):
 	if request.method == 'GET':
-		form = AskForm() # TODO: doesn't redirect back on ask form after logging in
+		form = AskForm() # TODO: issue - doesn't redirect back on ask form after logging in
 	else:
 		form = AskForm(data=request.POST)
 		if form.is_valid():
@@ -70,6 +70,8 @@ def ask_question(request):
 	return render(request, 'add_question_form.html', ctx)
 
 def login(request):
+	redirect_to = request.GET.get('next', '/')
+	error_message = None
 	if request.method == 'GET':
 		form = LoginForm()
 	else:
@@ -82,13 +84,17 @@ def login(request):
 
 				auth.login(request, user)
 				# /?next = /polls/3
-				return redirect("/") # TODO: сделать адаптивный редирект, чтобы возвращал туда откуда пришли на аутентифию
-	ctx = { 'form': form }
+				redirect_path = request.GET.get('next', '/')
+				return redirect(redirect_path) # TODO: сделать адаптивный редирект, чтобы возвращал туда откуда пришли на аутентифию
+			else:
+				error_message = "Incorrect login or password"
+	ctx = { 'form': form, 'redirect_to': redirect_to, 'error_message': error_message }
 	return render(request, 'auth.html', ctx)
 
 def logout(request):
 	auth.logout(request)
-	return redirect("/")
+	redirect_path = request.GET.get('next', '/')
+	return redirect(redirect_path)
 
 def sign_up(request):
 	if request.method == 'GET':
@@ -96,7 +102,7 @@ def sign_up(request):
 		form_user = CreateUserForm()
 	else:
 		data = request.POST
-		# TODO: return default image field value after validation, even if valid image value passed to form
+		# TODO: solve issue - return default image field value after validation, even if valid image value passed to form
 		profile_data = { 'image': data.get('image') }
 		user_data = { 'username': data.get('username'), 'email': data.get('email'), 'password': data.get('password') }
 		form_profile = CreateProfileForm(data = profile_data)
@@ -115,6 +121,25 @@ def sign_up(request):
 	ctx = { 'form_profile': form_profile, 'form_user': form_user }
 	return render(request, 'registration.html', ctx)
 
-def settings(request):
-	return render(request, 'settings.html', {
-		})
+# TODO: solve issue with image field (чтобы оно тоже проставлялось корректно в бд)
+@login_required
+def edit_profile(request):
+	cur_user = request.user.profile
+	if request.method == 'GET':
+		form = EditProfileForm(data = { 'user_name': cur_user.user_name, 'email': cur_user.email, 'image': cur_user.image })
+	else:
+		form = EditProfileForm(data = request.POST)
+		if form.is_valid():
+			print('FORM EDITED !!!')
+			data = form.cleaned_data
+			print(data)
+			cur_user.user_name = data.get('user_name')
+			cur_user.email = data.get('email')
+			cur_user.image = data.get('image')
+			request.user.username = data.get('user_name')
+			request.user.email = data.get('email')
+			cur_user.save()
+			request.user.save()
+
+	ctx = { 'form': form }
+	return render(request, 'settings.html', ctx)

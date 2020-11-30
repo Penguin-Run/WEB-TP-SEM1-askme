@@ -1,42 +1,22 @@
 {% extends 'inc/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 
 {% block content %}
     <div class="row">
-        <span id="page_header">Settings: <span>Ivan</span></span>
+        <span id="page_header">Profile edit</span>
     </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Login</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="ivan777">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Email</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="penguinlgb@gmail.com">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Nickname</div>
-        <div class="col-8">
-            <input type="text" class="form-control" placeholder="Ivan">
-        </div>
-    </div>
-    <div class="row input_row">
-        <div class="col-4 input_label">Upload avatar</div>
-        <div class="col-8">
-            <img src="{% static "img/111.jpg" %}" id="upload_avatar_img">
-            <input type="file" class="form-control-file file_ad" id="upload_avatar_file_input">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <button type="button" class="page_btn btn btn-outline-secondary">Save</button>
-        </div>
-    </div>
+    
+    <form class="form" method="POST" action="/profile/edit">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% buttons %}
+            <button type="submit" class="page_btn btn btn-outline-secondary">Save</button>
+        {% endbuttons %}
+    </form>
+
 {% endblock content %}
 
 {% block right %}

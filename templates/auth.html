@@ -7,10 +7,10 @@
     <div class="row">
         <span id="page_header">Log in</span>
     </div>
-    <div class="row">
-        <span id="alert_message">Sorry, wrong password(</span>
-    </div>
-    <form class="form" method="POST" action="/login/">
+
+    {% if error_message %}<span id="alert_message">{{ error_message }}</span>{% endif %}
+
+    <form class="form" method="POST" action="/login/?next={{ redirect_to }}" novalidate>
         {% csrf_token %}
         {% bootstrap_form form %}
 

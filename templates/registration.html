@@ -6,11 +6,8 @@
     <div class="row">
         <span id="page_header">Registration</span>
     </div>
-    <div class="row">
-        <span id="alert_message">Sorry, this email address already registered(</span>
-    </div>
     
-    <form class="form" method="POST" action="/signup/">
+    <form class="form" method="POST" action="/signup/" novalidate>
         {% csrf_token %}
         {% bootstrap_form form_user %}
         {% bootstrap_form form_profile %}
