@@ -57,7 +57,7 @@ def question_answers(request, question_id):
 @login_required
 def ask_question(request):
 	if request.method == 'GET':
-		form = AskForm() # TODO: issue - doesn't redirect back on ask form after logging in
+		form = AskForm()
 	else:
 		form = AskForm(data=request.POST)
 		if form.is_valid():
@@ -83,9 +83,8 @@ def login(request):
 				request.session['hello'] = 'world'
 
 				auth.login(request, user)
-				# /?next = /polls/3
 				redirect_path = request.GET.get('next', '/')
-				return redirect(redirect_path) # TODO: сделать адаптивный редирект, чтобы возвращал туда откуда пришли на аутентифию
+				return redirect(redirect_path)
 			else:
 				error_message = "Incorrect login or password"
 	ctx = { 'form': form, 'redirect_to': redirect_to, 'error_message': error_message }

@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from app.models import *
+from django.contrib.auth.models import User
 from random import choice
 from faker import Faker
 from django.db import IntegrityError
@@ -89,12 +90,15 @@ class Command(BaseCommand):
     def generate_users(self, cnt):
         for i in range(cnt):
             num_ava = f.random_int(min=1, max=17)
+
+            name = f.name()
+            email = f.email()
+            user = User.objects.create_user(username = name, email = email, password = 'xxx')
             profile = Profile.objects.create(
-                user_name = f.name(),
+                user = user,
+                user_name = name,
+                email = email,
                 image = f'/static/media/image/avatar/test{num_ava}.jpg'
-            )
-            User.objects.create(
-                author_id = profile.id
             )
 
     def generate_tags(self, cnt):
@@ -112,7 +116,7 @@ class Command(BaseCommand):
         tags_ids = Tag.objects.values_list(
             'id', flat=True
         )
-        users_ids = User.objects.values_list(
+        users_ids = Profile.objects.values_list(
             'id', flat=True
         )
 
@@ -127,7 +131,7 @@ class Command(BaseCommand):
             for j in range(f.random_int(min=1, max=5)):
                 question.tags.add(choice(tags_ids))
 
-            for j in range(f.random_int(min=10, max=50)):
+            for j in range(f.random_int(min=1, max=users_ids.count())):
                 self.generate_marks(question)
 
         self.fill_questions_with_answers(cnt*2, added_questions_ids)
@@ -140,7 +144,7 @@ class Command(BaseCommand):
                 'id', flat=True
             )
 
-        users_ids = User.objects.values_list(
+        users_ids = Profile.objects.values_list(
             'id', flat=True
         )
 
@@ -150,7 +154,7 @@ class Command(BaseCommand):
                 question_id = choice(question_ids),
                 author_id = choice(users_ids),
             )
-            for j in range(f.random_int(min=1, max=int(cnt / 10))):
+            for j in range(f.random_int(min=1, max=users_ids.count())):
                 self.generate_marks(answer)
 
 
