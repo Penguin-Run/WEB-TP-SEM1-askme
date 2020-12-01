@@ -1,5 +1,5 @@
 from django import forms
-from app.models import Question, Profile
+from app.models import Question, Profile, Answer
 from django.contrib.auth.models import User
 
 class EditProfileForm(forms.ModelForm):
@@ -25,8 +25,13 @@ class LoginForm(forms.Form):
 	username = forms.CharField()
 	password = forms.CharField(widget = forms.PasswordInput())
 
+# TODO: добавить возможность добавить свой тэг (создание тэга)
 class AskForm(forms.ModelForm):
 	class Meta:
 		model = Question
 		fields = ['title', 'text', 'tags']
 
+class AnswerForm(forms.ModelForm):
+	class Meta:
+		model = Answer
+		fields = ['text']

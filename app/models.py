@@ -96,7 +96,7 @@ class QuestionManager(models.Manager):
 class Question(models.Model):
 	title = models.CharField(max_length = 256, verbose_name = 'Заголовок')
 	text = models.TextField(verbose_name = 'Текст')
-	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
+	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата и время создания')
 	author = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')
 	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги', blank = True)
 
@@ -119,13 +119,12 @@ class Question(models.Model):
 
 class AnswerManager(models.Manager):
 	def question_answers(self, question_id):
-		# return self.filter(question__id = question_id).order_by('-rating', '-date_create')
-		return self.filter(question__id = question_id).order_by('-rating', '-date_create')
+		return self.filter(question__id = question_id).order_by('-rating', 'date_create')
 
 
 class Answer(models.Model):
 	text = models.TextField(verbose_name = 'Текст')
-	date_create = models.DateField(auto_now_add=True, verbose_name = 'Дата создания')
+	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата и время создания')
 	is_correct = models.BooleanField(default=False, verbose_name = 'Правильность')
 	question = models.ForeignKey('Question', on_delete = models.CASCADE, verbose_name = 'Вопрос')
 	author = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')

@@ -6,7 +6,7 @@ from app.models import Question, Answer, Profile
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from app.forms import LoginForm, AskForm, CreateProfileForm, CreateUserForm, EditProfileForm
+from app.forms import *
 
 
 def paginate(request, object_list, per_page = 5):
@@ -15,6 +15,10 @@ def paginate(request, object_list, per_page = 5):
     page_obj = paginator.get_page(page_number)
     return page_obj
 
+def paginate_new(request, paginator):
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	return page_obj
 
 def new_questions(request):
 	# sample how to use data in session, sessions will be very handy for hw-4
@@ -48,11 +52,37 @@ def question_answers(request, question_id):
 	question = Question.objects.question_by_id(question_id)
 	question_answers = Answer.objects.question_answers(question_id)
 
-	page_obj = paginate(request, question_answers)
-	return render(request, 'answers_page.html', {
-		'page_obj': page_obj,
-		'question': question,
-		})
+	OBJECTS_PER_PAGE = 3
+	paginator = Paginator(question_answers, OBJECTS_PER_PAGE)
+	page_obj = paginate_new(request, paginator)
+
+	if request.method == 'GET':
+		form = AnswerForm()
+	else:
+		form = AnswerForm(data = request.POST)
+		if form.is_valid():
+			answer = form.save(commit = False)
+			if request.user.is_authenticated:
+				answer.author = request.user.profile
+				answer.question = Question.objects.get(pk = question_id)
+				answer.save()
+				# если научусь передвать #smth в GET параметрах, то можно будет переключаться именно на конкретный ответ
+				
+				print(paginator.count)
+				print(OBJECTS_PER_PAGE)
+				print(paginator.count % OBJECTS_PER_PAGE)
+				if paginator.count % OBJECTS_PER_PAGE == 0:
+					page_number_for_ref = paginator.num_pages + 1
+				else:
+					page_number_for_ref = paginator.num_pages
+				return redirect(reverse('question_answers', kwargs = {'question_id': question.pk}) + f'?page={ page_number_for_ref }#{ answer.id }')
+			else:
+				# TODO: редирект на логин и next обратно сюда c СОХРАНЕНИЕМ текста ответа
+				path = reverse('login') + f'?next=/question/{ question_id }&anchor=scroll-to-form'
+				return redirect(path)
+
+	ctx = { 'page_obj': page_obj, 'question': question, 'form': form }
+	return render(request, 'answers_page.html', ctx)
 
 @login_required
 def ask_question(request):
@@ -60,7 +90,6 @@ def ask_question(request):
 		form = AskForm()
 	else:
 		form = AskForm(data=request.POST)
-		print(request.POST)
 		if form.is_valid():
 			question = form.save(commit = False)
 			question.author = request.user.profile
@@ -73,6 +102,10 @@ def ask_question(request):
 
 def login(request):
 	redirect_to = request.GET.get('next', '/')
+	anchor = request.GET.get('anchor')
+	if anchor is not None:
+		redirect_to += '#' + anchor
+	print(redirect_to)
 	error_message = None
 	if request.method == 'GET':
 		form = LoginForm()
@@ -85,10 +118,10 @@ def login(request):
 				request.session['hello'] = 'world'
 
 				auth.login(request, user)
-				redirect_path = request.GET.get('next', '/')
-				return redirect(redirect_path)
+				return redirect(redirect_to)
 			else:
 				error_message = "Incorrect login or password"
+
 	ctx = { 'form': form, 'redirect_to': redirect_to, 'error_message': error_message }
 	return render(request, 'auth.html', ctx)
 

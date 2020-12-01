@@ -1,5 +1,6 @@
 {% extends 'inc/base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block header %}
 {% endblock header %}
@@ -38,9 +39,16 @@
     {% endfor %}
 
     <hr/>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Guys, i have trouble with a moon park. Can't find the black-jack..."></textarea>
-    <button id="answer_btn_answer_page" type="button" class="page_btn btn btn-outline-secondary" id="answer_btn">Answer!
-    </button>
+    <a name="scroll-to-form"></a>
+    <form class="form" method="POST" action="/question/{{ question.id }}/" novalidate>
+
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% buttons %}
+            <button type="submit" class="page_btn btn btn-outline-secondary">Answer!</button>
+        {% endbuttons %}
+    </form>
 {% endblock content %}
 
 {% block right %}
