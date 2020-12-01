@@ -28,5 +28,5 @@ class LoginForm(forms.Form):
 class AskForm(forms.ModelForm):
 	class Meta:
 		model = Question
-		fields = ['title', 'text']
+		fields = ['title', 'text', 'tags']
 

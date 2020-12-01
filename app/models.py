@@ -98,7 +98,7 @@ class Question(models.Model):
 	text = models.TextField(verbose_name = 'Текст')
 	date_create = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
 	author = models.ForeignKey('Profile', on_delete = models.CASCADE, verbose_name = 'Автор')
-	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги')
+	tags = models.ManyToManyField('Tag', verbose_name = 'Тэги', blank = True)
 
 	# поле должно быть пересчитано при каждом новом добавлении оценки (Mark) этого вопроса
 	rating = models.IntegerField(default = 0, blank = True, verbose_name = 'Рейтинг')

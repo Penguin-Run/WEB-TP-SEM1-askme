@@ -60,10 +60,12 @@ def ask_question(request):
 		form = AskForm()
 	else:
 		form = AskForm(data=request.POST)
+		print(request.POST)
 		if form.is_valid():
 			question = form.save(commit = False)
 			question.author = request.user.profile
 			question.save()
+			question.tags.set(form.cleaned_data['tags'])
 			return redirect(reverse('question_answers', kwargs = {'question_id': question.pk}))
 
 	ctx = { 'form': form }

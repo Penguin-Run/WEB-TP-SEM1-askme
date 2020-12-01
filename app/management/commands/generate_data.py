@@ -6,9 +6,6 @@ from faker import Faker
 from django.db import IntegrityError
 f = Faker()
 
-# TODO: !!!!!! переделать создание пользователя, с учетом изменения структуры БД 
-# (user теперь не мое entity, а берется из django.user)
-
 class Command(BaseCommand):
     help = 'Generates Data'
 
