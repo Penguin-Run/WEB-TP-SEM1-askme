@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col">
                         <span class="ans_tag">Tags:</span>
-                            {% for tag in question.tags.get_all_tags %}
+                            {% for tag in tags %}
                                 <a class="ans_tag" href="{% url 'tag' tag  %}">{{ tag }}</a>
                             {% endfor %}
                     </div>

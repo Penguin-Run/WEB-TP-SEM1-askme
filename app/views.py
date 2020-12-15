@@ -21,7 +21,7 @@ def paginate_new(request, paginator):
 	return page_obj
 
 def new_questions(request):
-	# sample how to use data in session, sessions will be very handy for hw-4
+	# sample how to use data in session storage
 	print(f'HELLO: { request.session.get("hello") }')
 
 	new_questions = Question.objects.new_questions()
@@ -49,9 +49,8 @@ def tag_questions(request, tag):
     })
 
 def question_answers(request, question_id):
-	question = Question.objects.question_by_id(question_id)
+	question = Question.objects.question_by_id(question_id) # TODO: get_object_or_404 implement
 	question_answers = Answer.objects.question_answers(question_id)
-
 	OBJECTS_PER_PAGE = 3
 	paginator = Paginator(question_answers, OBJECTS_PER_PAGE)
 	page_obj = paginate_new(request, paginator)
@@ -59,18 +58,12 @@ def question_answers(request, question_id):
 	if request.method == 'GET':
 		form = AnswerForm()
 	else:
-		form = AnswerForm(data = request.POST)
+		form = AnswerForm(data = request.POST, user = request.user, question_pk = question_id)
 		if form.is_valid():
-			answer = form.save(commit = False)
 			if request.user.is_authenticated:
-				answer.author = request.user.profile
-				answer.question = Question.objects.get(pk = question_id)
-				answer.save()
-				# если научусь передвать #smth в GET параметрах, то можно будет переключаться именно на конкретный ответ
-				
-				print(paginator.count)
-				print(OBJECTS_PER_PAGE)
-				print(paginator.count % OBJECTS_PER_PAGE)
+				answer = form.save()
+
+				# redirect logic
 				if paginator.count % OBJECTS_PER_PAGE == 0:
 					page_number_for_ref = paginator.num_pages + 1
 				else:
@@ -81,7 +74,12 @@ def question_answers(request, question_id):
 				path = reverse('login') + f'?next=/question/{ question_id }&anchor=scroll-to-form'
 				return redirect(path)
 
-	ctx = { 'page_obj': page_obj, 'question': question, 'form': form }
+	# TODO: используемые в шаблоне связанные сущности отдавать сразу на этапе рендера в контексте
+	ctx = { 
+	'page_obj': page_obj,
+	'question': question,
+	'tags': question.tags.get_all_tags(),
+	'form': form }
 	return render(request, 'answers_page.html', ctx)
 
 @login_required
@@ -89,12 +87,9 @@ def ask_question(request):
 	if request.method == 'GET':
 		form = AskForm()
 	else:
-		form = AskForm(data=request.POST)
+		form = AskForm(data=request.POST, user = request.user)
 		if form.is_valid():
-			question = form.save(commit = False)
-			question.author = request.user.profile
-			question.save()
-			question.tags.set(form.cleaned_data['tags'])
+			question = form.save(tags = form.cleaned_data['tags'])
 			return redirect(reverse('question_answers', kwargs = {'question_id': question.pk}))
 
 	ctx = { 'form': form }
@@ -105,7 +100,6 @@ def login(request):
 	anchor = request.GET.get('anchor')
 	if anchor is not None:
 		redirect_to += '#' + anchor
-	print(redirect_to)
 	error_message = None
 	if request.method == 'GET':
 		form = LoginForm()
@@ -132,23 +126,23 @@ def logout(request):
 
 def sign_up(request):
 	if request.method == 'GET':
-		form_profile = CreateProfileForm()
 		form_user = CreateUserForm()
+		form_profile = CreateProfileForm()
 	else:
-		data = request.POST
+		pdata = request.POST
 		# TODO: solve issue - return default image field value after validation, even if valid image value passed to form
-		profile_data = { 'image': data.get('image') }
-		user_data = { 'username': data.get('username'), 'email': data.get('email'), 'password': data.get('password') }
-		form_profile = CreateProfileForm(data = profile_data)
+		# HOTFIX: done without validation at Profile.objects.create
+		user_data = { 'username': pdata.get('username'), 'email': pdata.get('email'), 'password': pdata.get('password'), 'repeat_password': pdata.get('repeat_password') }
 		form_user = CreateUserForm(data = user_data)
+		form_profile = CreateProfileForm(data = { 'image': pdata.get('image') })
 		if form_profile.is_valid() and form_user.is_valid():
 			data = form_user.cleaned_data
 			user = User.objects.create_user(username = data.get('username'), email = data.get('email'), password = data.get('password'))
-			profile = form_profile.save(commit = False)
-			profile.user = user
-			profile.user_name = data.get('username')
-			profile.email = data.get('email')
-			profile.save()
+			profile = Profile.objects.create(
+				user = user,
+				user_name = data.get('username'),
+				email = data.get('email'),
+				image = pdata.get('image'))
 			auth.login(request, user)
 			return redirect("/")
 
@@ -156,24 +150,23 @@ def sign_up(request):
 	return render(request, 'registration.html', ctx)
 
 # TODO: solve issue with image field (чтобы оно тоже проставлялось корректно в бд)
+# HOTFIX: done without validation at user.profile.image =
 @login_required
 def edit_profile(request):
-	cur_user = request.user.profile
+	user = request.user
 	if request.method == 'GET':
-		form = EditProfileForm(data = { 'user_name': cur_user.user_name, 'email': cur_user.email, 'image': cur_user.image })
+		form = EditProfileForm(data = { 'user_name': user.profile.user_name, 'email': user.profile.email, 'image': user.profile.image })
 	else:
 		form = EditProfileForm(data = request.POST)
 		if form.is_valid():
-			print('FORM EDITED !!!')
 			data = form.cleaned_data
-			print(data)
-			cur_user.user_name = data.get('user_name')
-			cur_user.email = data.get('email')
-			cur_user.image = data.get('image')
-			request.user.username = data.get('user_name')
-			request.user.email = data.get('email')
-			cur_user.save()
-			request.user.save()
+			user.profile.user_name = data.get('user_name')
+			user.profile.email = data.get('email')
+			user.profile.image = request.POST.get('image')
+			user.username = data.get('user_name')
+			user.email = data.get('email')
+			user.profile.save()
+			user.save()
 
 	ctx = { 'form': form }
 	return render(request, 'settings.html', ctx)
