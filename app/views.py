@@ -130,8 +130,6 @@ def sign_up(request):
 		form_profile = CreateProfileForm()
 	else:
 		pdata = request.POST
-		# TODO: solve issue - return default image field value after validation, even if valid image value passed to form
-		# HOTFIX: done without validation at Profile.objects.create
 		user_data = { 'username': pdata.get('username'), 'email': pdata.get('email'), 'password': pdata.get('password'), 'repeat_password': pdata.get('repeat_password') }
 		form_user = CreateUserForm(data = user_data)
 		form_profile = CreateProfileForm(data = { 'image': pdata.get('image') }, files = request.FILES)
@@ -150,10 +148,6 @@ def sign_up(request):
 	ctx = { 'form_profile': form_profile, 'form_user': form_user }
 	return render(request, 'registration.html', ctx)
 
-# TODO: solve issue with image field (чтобы оно тоже проставлялось корректно в бд)
-# HOTFIX: done without validation at user.profile.image =
-
-# TODO:try to work with only one form and with avatar
 @login_required
 def edit_profile(request):
 	user = request.user
@@ -173,7 +167,6 @@ def edit_profile(request):
 			user.email = data.get('email')
 			user.profile.save()
 			user.save()
-			form.save()
 
 	ctx = { 'form': form }
 	return render(request, 'settings.html', ctx)
