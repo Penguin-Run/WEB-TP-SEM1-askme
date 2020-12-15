@@ -8,7 +8,7 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ask!</button>
         </form>
     </div>
-    <img id="navbar_avatar_image" src="{% static "img/111.jpg" %}" alt="My image">
+    <img id="navbar_avatar_image" src="{{ request.user.profile.image.url }}" alt="My image">
     <div>
         <div class="profile_info">
             <span id="name"> {{ request.user.username }} </span>

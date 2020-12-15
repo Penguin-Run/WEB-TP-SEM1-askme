@@ -18,8 +18,8 @@ class Profile(models.Model):
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
 	email = models.EmailField(verbose_name = 'E-mail', default = 'default@def.com', blank = True)
 	image = models.ImageField(
-		upload_to='static/madia/image/avatar/',
-		default = 'static/media/image/avatar/200.jpeg',
+		upload_to='avatar/%Y/%m/%d/',
+		default = 'default_imgs/avatar/200.jpeg',
         blank = True,
         verbose_name='Аватарка'
     ) # TODO: browser can't find image

@@ -8,7 +8,7 @@
         <span id="page_header">Profile edit</span>
     </div>
     
-    <form class="form" method="POST" action="/profile/edit">
+    <form class="form" method="POST" action="/profile/edit" novalidate enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
 

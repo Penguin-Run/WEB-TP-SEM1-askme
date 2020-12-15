@@ -134,15 +134,16 @@ def sign_up(request):
 		# HOTFIX: done without validation at Profile.objects.create
 		user_data = { 'username': pdata.get('username'), 'email': pdata.get('email'), 'password': pdata.get('password'), 'repeat_password': pdata.get('repeat_password') }
 		form_user = CreateUserForm(data = user_data)
-		form_profile = CreateProfileForm(data = { 'image': pdata.get('image') })
+		form_profile = CreateProfileForm(data = { 'image': pdata.get('image') }, files = request.FILES)
 		if form_profile.is_valid() and form_user.is_valid():
 			data = form_user.cleaned_data
 			user = User.objects.create_user(username = data.get('username'), email = data.get('email'), password = data.get('password'))
+			# add validation if image is none
 			profile = Profile.objects.create(
 				user = user,
 				user_name = data.get('username'),
 				email = data.get('email'),
-				image = pdata.get('image'))
+				image = request.FILES.get('image', None))
 			auth.login(request, user)
 			return redirect("/")
 
@@ -151,22 +152,28 @@ def sign_up(request):
 
 # TODO: solve issue with image field (чтобы оно тоже проставлялось корректно в бд)
 # HOTFIX: done without validation at user.profile.image =
+
+# TODO:try to work with only one form and with avatar
 @login_required
 def edit_profile(request):
 	user = request.user
 	if request.method == 'GET':
 		form = EditProfileForm(data = { 'user_name': user.profile.user_name, 'email': user.profile.email, 'image': user.profile.image })
 	else:
-		form = EditProfileForm(data = request.POST)
+		form = EditProfileForm(
+			data = request.POST, 
+			files = request.FILES,
+			instance = request.user.profile)
 		if form.is_valid():
 			data = form.cleaned_data
 			user.profile.user_name = data.get('user_name')
 			user.profile.email = data.get('email')
-			user.profile.image = request.POST.get('image')
+			user.profile.image = request.FILES.get('image', None)
 			user.username = data.get('user_name')
 			user.email = data.get('email')
 			user.profile.save()
 			user.save()
+			form.save()
 
 	ctx = { 'form': form }
 	return render(request, 'settings.html', ctx)

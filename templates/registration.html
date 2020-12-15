@@ -7,7 +7,7 @@
         <span id="page_header">Registration</span>
     </div>
     
-    <form class="form" method="POST" action="/signup/" novalidate>
+    <form class="form" method="POST" action="/signup/" novalidate enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form_user %}
         {% bootstrap_form form_profile %}
