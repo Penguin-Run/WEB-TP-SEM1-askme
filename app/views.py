@@ -192,7 +192,7 @@ def vote(request):
 	print(res)
 
 	# return new rating for js to update rating state on page
-	return JsonResponse({'object_rating': res})
+	return JsonResponse({'object_rating': res, 'action': data.get('action')})
 
 
 # обработка кнопки выставления правильного ответа

@@ -23,8 +23,16 @@ $('.js-vote').click(function(ev) {
 		// переставляем активность кнопки
 		upvote_element_id = object_type + "-upvote-btn-qid-" + object_id;
 		downvote_element_id = object_type + "-downvote-btn-qid-" + object_id;
-		$('#' + upvote_element_id).toggleClass('js-vote-inactive');
-		$('#' + downvote_element_id).toggleClass('js-vote-inactive');
+		if (data['action'] == 'like') {
+			$('#' + upvote_element_id).addClass('js-vote-inactive');
+			$('#' + downvote_element_id).removeClass('js-vote-inactive');
+		} else if (data['action'] == 'dislike') {
+			$('#' + upvote_element_id).removeClass('js-vote-inactive');
+			$('#' + downvote_element_id).addClass('js-vote-inactive');
+		} else {
+			console.log('uncaught case');
+		}
+		
 	});
 	console.log("CLIENT:" + action +  " - " + object_type + " - " + object_id);
 });
