@@ -177,12 +177,12 @@ def edit_profile(request):
 	return render(request, 'settings.html', ctx)
 
 
+# обработка лайков/дизлайков
 @require_POST
 @login_required
 def vote(request):
 	data = request.POST
 	print(f'HERE: {pformat(data)}')
-	# TODO: обработка лайков
 
 	res = Mark.objects.set_mark(
 		user_id = request.user.profile.id,
@@ -193,6 +193,22 @@ def vote(request):
 
 	# return new rating for js to update rating state on page
 	return JsonResponse({'object_rating': res})
+
+
+# обработка кнопки выставления правильного ответа
+@require_POST
+@login_required
+def correct_answer(request):
+	data = request.POST
+	print(f'HERE: {pformat(data)}')
+
+	if Question.objects.get(pk = data['question_id']).author.user == request.user:
+		answer = Answer.objects.get(pk = data['answer_id'])
+		answer.is_correct = not answer.is_correct
+		answer.save()
+		print('answer correct status changed')
+
+	return JsonResponse({})
 
 
 

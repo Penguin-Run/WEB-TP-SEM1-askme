@@ -38,4 +38,5 @@ urlpatterns = [
     path('profile/edit', views.edit_profile, name='profile_edit'),
 
     path('vote/', views.vote, name='vote'),
+    path('correct-answer/', views.correct_answer, name='correct_answer'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
