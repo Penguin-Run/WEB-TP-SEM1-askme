@@ -1,11 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.core.paginator import Paginator
 import random
+from pprint import pformat
 
-from app.models import Question, Answer, Profile
+from app.models import Question, Answer, Profile, Mark
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
 from app.forms import *
 
 
@@ -170,3 +175,29 @@ def edit_profile(request):
 
 	ctx = { 'form': form }
 	return render(request, 'settings.html', ctx)
+
+
+@require_POST
+@login_required
+def vote(request):
+	data = request.POST
+	print(f'HERE: {pformat(data)}')
+	# TODO: обработка лайков
+
+	res = Mark.objects.set_mark(
+		user_id = request.user.profile.id,
+		content_object_type = data.get('object_type'),
+		content_object_id = data.get('object_id'),
+		mark_type = data.get('action'))
+	print(res)
+
+	# return new rating for js to update rating state on page
+	return JsonResponse({'object_rating': res})
+
+
+
+
+
+
+
+

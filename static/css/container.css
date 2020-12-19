@@ -1,3 +1,47 @@
+
+a.js-vote-active {
+
+}
+
+a.js-vote-inactive {
+	pointer-events: none;
+}
+/*
+a.js-vote-inactive:hover {
+	background-color: gray;
+}
+*/
+
+button.fade-button-upvote {
+	background-color: white;
+	border: none;
+	color: black;
+	padding: 2px 2px;
+	text-align: center;
+	font-size: 16px;
+	margin: 2px 2px;
+	transition: 0.3s;
+}
+button.fade-button-upvote:hover {
+	background-color: #3e8e41;
+  	color: white;
+}
+
+button.fade-button-downvote {
+	background-color: white;
+	border: none;
+	color: black;
+	padding: 2px 2px;
+	text-align: center;
+	font-size: 16px;
+	margin: 2px 2px;
+	transition: 0.3s;
+}
+button.fade-button-downvote:hover {
+	background-color: #FF0000;
+  	color: white;
+}
+
 .question-box {
     border: 1px solid gray;
     padding: 10px;

@@ -13,6 +13,12 @@ class ProfileManager(models.Manager):
  		# TODO: implement logic of best members
  		return self.all()[:15]
 
+	def get_user_vote(self, user, obj_type, obj_id):
+		type = ContentType.objects.get(app_label='app', model=obj_type) # model='question'
+
+		# get will throw doesNotExist
+		return self.get(user = user).mark_set.filter(object_id = obj_id, content_type = type).first()
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	user_name = models.CharField(max_length = 256, verbose_name = 'Имя в системе')
@@ -56,6 +62,55 @@ class Profile(models.Model):
 class MarkManager(models.Manager):
 	def count_rating(self):
 		return self.filter(mark_type = Mark.MarkType.LIKE).count() - self.filter(mark_type = Mark.MarkType.DISLIKE).count()
+
+	def set_mark(self, user_id, content_object_type, content_object_id, mark_type):
+		if mark_type == 'dislike':
+			mark_type_enum = Mark.MarkType.DISLIKE
+		else:
+			mark_type_enum = Mark.MarkType.LIKE
+
+		content_type = ContentType.objects.get(app_label='app', model=content_object_type)
+		obj, created = Mark.objects.get_or_create(
+			user_id = user_id, 
+			content_type = content_type,
+			object_id = content_object_id
+		)
+
+        # подгружаю из БД объект, которому поставили оценку
+		if content_object_type == 'question':
+			content_object = Question.objects.get(pk = content_object_id)
+		elif content_object_type == 'answer':
+			content_object = Answer.objects.get(pk = content_object_id)
+
+		# если оценки еще не было и она была создана сейчас
+		if created:
+			obj.mark_type = mark_type_enum
+			obj.save()
+			# обновление рейтинга у объекта, которому поставили оценку
+			if(mark_type_enum == Mark.MarkType.LIKE):
+			    content_object.rating += 1
+			else:
+			    content_object.rating -= 1
+			content_object.save()
+		else:
+			# если это не попытка поставить ту же самую оценку
+			if (obj.mark_type != mark_type_enum):
+				obj.mark_type = mark_type_enum
+				obj.save()
+
+				# обновление рейтинга у объекта, которому поставили оценку
+				if(mark_type_enum == Mark.MarkType.LIKE):
+					content_object.rating += 2
+				else:
+					content_object.rating -= 2
+				content_object.save()
+			else:
+				print("TRYING TO ADD SAME MARK")
+				return None
+
+		return content_object.rating
+
+
 
 class Mark(models.Model):
 	class MarkType(models.TextChoices):
