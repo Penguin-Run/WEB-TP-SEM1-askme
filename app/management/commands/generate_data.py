@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--db_size',
-            choices=['test', 'small', 'medium', 'large'],
+            choices=['test', 'small', 'medium', 'large', 'max'],
             help='choose how many data to generate'
         )
         parser.add_argument('--add_users', type=int, help='users creation')
@@ -29,6 +29,7 @@ class Command(BaseCommand):
                 'small': 0.0005,
                 'medium': 0.001,
                 'large': 0.01,
+                'max': 1,
                 }.get(opt, 0.00005)
             self.generate_database(part)
 
@@ -90,7 +91,12 @@ class Command(BaseCommand):
 
             name = f.name()
             email = f.email()
-            user = User.objects.create_user(username = name, email = email, password = 'xxx')
+            try:
+                user = User.objects.create_user(username = name, email = email, password = 'xxx')
+            except IntegrityError:
+                name = f.name() + ' ' + f.name()
+                user = User.objects.create_user(username = name, email = email, password = 'xxx')
+
             profile = Profile.objects.create(
                 user = user,
                 user_name = name,
@@ -129,7 +135,7 @@ class Command(BaseCommand):
             for j in range(f.random_int(min=1, max=5)):
                 question.tags.add(choice(tags_ids))
 
-            for j in range(f.random_int(min=1, max=users_ids.count())):
+            for j in range(f.random_int(min=10, max=20)):
                 self.generate_marks(question)
 
         self.fill_questions_with_answers(cnt*2, added_questions_ids)
@@ -152,10 +158,5 @@ class Command(BaseCommand):
                 question_id = choice(question_ids),
                 author_id = choice(users_ids),
             )
-            for j in range(f.random_int(min=1, max=users_ids.count())):
+            for j in range(f.random_int(min=10, max=30)):
                 self.generate_marks(answer)
-
-
-
-
-
