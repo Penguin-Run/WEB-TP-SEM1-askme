@@ -82,7 +82,8 @@ class Command(BaseCommand):
             mark_object.save()
         except IntegrityError:
             # catch попытки добавления пользователем повторной оценки
-            self.generate_marks(mark_object)
+            # self.generate_marks(mark_object)
+            a = 1
 
 
     def generate_users(self, cnt):
@@ -158,5 +159,5 @@ class Command(BaseCommand):
                 question_id = choice(question_ids),
                 author_id = choice(users_ids),
             )
-            for j in range(f.random_int(min=10, max=30)):
+            for j in range(f.random_int(min=1, max=2)):
                 self.generate_marks(answer)
